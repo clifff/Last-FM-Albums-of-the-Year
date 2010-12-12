@@ -41,6 +41,15 @@
 			if (topAlbums.length >= 10 || thisAlbum === undefined){
 				return;
 			}
+	
+			// Try and Check for common fuckups in the naming
+			thisAlbum.name = thisAlbum.name.replace("CD 1", "");
+			thisAlbum.name = thisAlbum.name.replace("Deluxe Edition", "");
+			thisAlbum.name = thisAlbum.name.replace("(Bonus Track Version)", "");
+			thisAlbum.name = thisAlbum.name.replace(" EP", "");
+			thisAlbum.name = thisAlbum.name.replace("[Explicit]", "");
+			  
+			
 
 			lastfm.album.getInfo({album: thisAlbum.name, artist: thisAlbum.artist.name},
 				{success: function(fmData){
@@ -58,34 +67,42 @@
 						query+= escape(thisAlbum.artist.name)+"&title="+escape(thisAlbum.name) + "'";
 						$.YQL(query,
 							function(yqlData){
-								console.log(yqlData.query.results.metadata['release-list']);
-								// Find the relesase date if there are multiple releases objects
-								var releaseDate;
-								var releaseObject = yqlData.query.results.metadata['release-list'].release
-								if (releaseObject instanceof Array){
-									var eventObject = releaseObject[0]['release-event-list'].event;
-									if (eventObject instanceof Array){
-										releaseDate = eventObject[0].date;
+								// Very likely we get stuff undefined errors in here, so catch and continue if so
+								try{	
+									//console.log(yqlData.query.results.metadata['release-list']);
+									// Find the relesase date if there are multiple releases objects
+									var releaseDate;
+									var releaseObject = yqlData.query.results.metadata['release-list'].release;
+									if (releaseObject instanceof Array){
+										var eventObject = releaseObject[0]['release-event-list'].event;
+										if (eventObject instanceof Array){
+											releaseDate = eventObject[0].date;
+										}
+										else{
+											releaseDate = eventObject.date;
+										}
 									}
+									// Or if there is only one release
 									else{
-										releaseDate = eventObject.date;
+										// Get the date if events is an array
+										var eventObject = releaseObject['release-event-list'].event;
+										if (eventObject instanceof Array){
+											releaseDate = eventObject[0].date;
+										}
+										// Or if there is just one event
+										else {
+											releaseDate = eventObject.date;
+										}
+									}
+									// Fucking finally. Should have the release date by now...
+									if (releaseDate.indexOf("2010") != -1){
+										addAlbum(fmData);
 									}
 								}
-								// Or if there is only one release
-								else{
-									// Get the date if events is an array
-									var eventObject = releaseObject['release-event-list'].event;
-									if (eventObject instanceof Array){
-										releaseDate = eventObject[0].date;
-									}
-									// Or if there is just one event
-									else {
-										releaseDate = eventObject.date;
-									}
-								}
-								// Fucking finally. Should have the release date by now...
-								if (releaseDate.indexOf("2010") != -1){
-									addAlbum(fmData);
+								catch (error){
+									console.log("Oops, fucked up parsin a MusicBrainz results. Hope it's not from 2010. Here it is...");
+									console.log(yqlData);
+									console.log("PS: Artist: " + thisAlbum.artist.name + " - " + thisAlbum.name);
 								}
 								parseAlbums(list);
 						});
