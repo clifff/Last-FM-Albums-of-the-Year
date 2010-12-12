@@ -8,7 +8,10 @@ h1, h2 {
 .hidden {
   display: none; }
 
-.verticalCenter {
+.vertialOut {
+  position: relative; }
+
+.verticalIn {
   position: absolute;
   top: 50%;
   height: 205px;
