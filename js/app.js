@@ -18,11 +18,12 @@ var topAlbums = [];
 var albumList;
 var realUserName;
 
-var counter = 0;	
+var parseAlbumsCounter = 0;	
+var lastRequest; 
 function parseAlbums(list){
-	var thisAlbum = list[counter];
-	counter += 1;
-	if (topAlbums.length >= 10 || thisAlbum === undefined){
+	var thisAlbum = list[parseAlbumsCounter];
+	parseAlbumsCounter += 1;
+	if (thisAlbum === undefined){
 		return;
 	}
 
@@ -32,16 +33,19 @@ function parseAlbums(list){
 	thisAlbum.name = thisAlbum.name.replace("(Bonus Track Version)", "");
 	thisAlbum.name = thisAlbum.name.replace(" EP", "");
 	thisAlbum.name = thisAlbum.name.replace("[Explicit]", "");
+	thisAlbum.name = thisAlbum.name.replace(" ()", "");
 
 	lastfm.album.getInfo({album: thisAlbum.name, artist: thisAlbum.artist.name},
 		{success: function(fmData){
 			// Try and get the release date from the Last.FM data
+			console.log(thisAlbum.artist.name + " - " + thisAlbum.name);
+			console.log(thisAlbum);
 			var trimmedDate = fmData.album.releasedate.replace(/^\s+|\s+$/g, '');
 			if (trimmedDate != ""){
 				if (fmData.album.releasedate.indexOf("2010") != -1){
-					addAlbum(fmData);
+					addAlbum(thisAlbum);	
 				}
-				parseAlbums(list);
+				//parseAlbums(list);
 			}
 			// Snap, no release data. Lets get it from YQL/MusicBrains!
 			else{
@@ -78,7 +82,7 @@ function parseAlbums(list){
 							}
 							// Fucking finally. Should have the release date by now...
 							if (releaseDate.indexOf("2010") != -1){
-								addAlbum(fmData);
+								addAlbum(thisAlbum);	
 							}
 						}
 						catch (error){
@@ -86,33 +90,43 @@ function parseAlbums(list){
 							console.log(yqlData);
 							console.log("PS: Artist: " + thisAlbum.artist.name + " - " + thisAlbum.name);
 						}
-						parseAlbums(list);
 				});
+			}
+			// Check and see if this was the last album. If so, show the results
+			if (thisAlbum.name == list[49].name){
+				showResults();
 			}
 		}},
 		{error: function(code, message){
 			console.log("Error! Code: " + code + " Message: " + message);
 		}});
+		parseAlbums(list);
 }
 
-var shownCounter = 0;	
-function addAlbum(thisAlbum){
-	topAlbums.push(thisAlbum);
-	
+function addAlbum(album){
+	topAlbums.push(album);
+}
+
+function showResults(){
 	if ($('#loading').is(":visible")){
 		$('#loading').hide('blind');
 	}
 	results = $('#main');
-	if (shownCounter == 0){
-		results.append('<h1>' + realUserName + "'s Top Albums of 2010</h1>");
-		results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
-		results.show('blind');
+
+	results.append('<h1>' + realUserName + "'s Top Albums of 2010</h1>");
+	results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
+	results.show('blind');
+	// Sort top albums before displaying!
+	function compareAlbums(a,b) {
+		return b.playcount - a.playcount;
 	}
-	var newDiv = "<div id='result" + shownCounter + "'><img src='" + thisAlbum.album.image[3]["#text"] + "'><br/>";
-	newDiv += "<h3>" + thisAlbum.album.artist + " - " + thisAlbum.album.name + '</h3></div>';
-	results.append(newDiv);
-	$('#result' + shownCounter).show('blind');
-	shownCounter += 1;
+	topAlbums.sort(compareAlbums);
+	$.each(topAlbums, function(index, value) {
+		var newDiv = "<div id='result" + index + "'><img src='" + value.image[3]["#text"] + "'><br/>";
+		newDiv += "<h3>" + value.artist.name + " - " + value.name + '</h3></div>';
+		results.append(newDiv);
+		$('#result' + index).show('blind');
+	});
 }
 
 $(function(){
