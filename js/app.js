@@ -39,7 +39,7 @@ function parseAlbums(list){
 		{success: function(fmData){
 			// Try and get the release date from the Last.FM data
 			console.log(thisAlbum.artist.name + " - " + thisAlbum.name);
-			console.log(thisAlbum);
+			console.log(fmData);
 			var trimmedDate = fmData.album.releasedate.replace(/^\s+|\s+$/g, '');
 			if (trimmedDate != ""){
 				if (fmData.album.releasedate.indexOf("2010") != -1){
@@ -108,25 +108,30 @@ function addAlbum(album){
 }
 
 function showResults(){
-	if ($('#loading').is(":visible")){
-		$('#loading').hide('blind');
-	}
-	results = $('#main');
+	results = $('#results');
 
 	results.append('<h1>' + realUserName + "'s Top Albums of 2010</h1>");
 	results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
-	results.show('blind');
 	// Sort top albums before displaying!
 	function compareAlbums(a,b) {
 		return b.playcount - a.playcount;
 	}
 	topAlbums.sort(compareAlbums);
 	$.each(topAlbums, function(index, value) {
+		if (index > 9){
+			return false;
+		}
 		var newDiv = "<div id='result" + index + "'><img src='" + value.image[3]["#text"] + "'><br/>";
 		newDiv += "<h3>" + value.artist.name + " - " + value.name + '</h3></div>';
 		results.append(newDiv);
 		$('#result' + index).show('blind');
 	});
+
+	// Finally, hide the loading screen and show the results
+	if ($('#loading').is(":visible")){
+		$('#loading').hide('blind');
+	}
+	results.show('blind');
 }
 
 $(function(){
@@ -139,8 +144,8 @@ $(window).hashchange( function(){
 		if ($('#loading').is(":visible")){
 			$('#loading').hide('blind');
 		}
-		if ($('#main').is(":visible")){
-			$('#main').hide('blind');
+		if ($('#results').is(":visible")){
+			$('#results').hide('blind');
 		}
 		if ($('#getUser').is(":hidden")){
 			$('#getUser').show('blind');
@@ -151,30 +156,39 @@ $(window).hashchange( function(){
 
 	// If the failure message is showing, hide it
 	var userFail = $('#getUserFailure');
-	if ($(userFail).is(":visible"))
-		{$(userFail).hide('blind');}
+	if ($(userFail).is(":visible")){
+		$(userFail).hide('blind');
+	}
 
-	lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {success: function(data){
-		console.log(data);
-		realUserName = data.topalbums['@attr'].user;
-		// Set the page title based on the username.
-		document.title = realUserName + "'s Top Albums of 2010";
-		if (data.topalbums.album == null){
-			$(userFail).html("Sorry, that username appears to be invalid. Maybe you misspelled it?");
-			$(userFail).show('blind');
-		}
-		// Looks like everything is fine. Set the hash parameter and let hashchange take over
-		// Set the parameter
-		$('#getUser').hide('blind');
-		$('#loading').show('blind');
-		
-		albumList = data.topalbums.album;
-		parseAlbums(albumList);
-	}, error: function(code, message){	
+
+	function getUserFail(){
 		$(userFail).html("Sorry, that username appears to be invalid. Maybe you misspelled it?");
 		$(userFail).show('blind');
-	}});
-	
+	}
+
+	lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {
+		success: function(data){
+			console.log(data);
+
+			if (data.topalbums.album == null){
+				getUserFail();
+				return;
+			}
+
+			realUserName = data.topalbums['@attr'].user;
+			// Set the page title based on the username.
+			document.title = realUserName + "'s Top Albums of 2010";
+			// Looks like everything is fine. Set the hash parameter and let hashchange take over
+			// Set the parameter
+			$('#getUser').hide('blind');
+			$('#loading').show('blind');
+			
+			albumList = data.topalbums.album;
+			parseAlbums(albumList);
+		}, error: function(code, message){	
+			getUserFail();
+		}
+	});
 })
 
 // Since the event is only triggered when the hash changes, we need to trigger
