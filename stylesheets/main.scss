@@ -4,14 +4,25 @@
 .main{
 	text-align: center;
 	height: 100%;
+	padding-left: 140px;
 }
 
 h1, h2 {
 		margin-bottom: 0.25em;
 }
 
+h4 {
+	margin-bottom: 0em;
+}
+
 .toolbar{
-	position: absolute;
+	padding-top: 10em;
+	position: fixed;
+}
+
+#friendsToolbar{
+	margin-left: 840px;
+	text-align: center;
 }
 
 .hidden{
