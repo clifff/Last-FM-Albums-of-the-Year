@@ -38,8 +38,8 @@ function parseAlbums(list){
 	lastfm.album.getInfo({album: thisAlbum.name, artist: thisAlbum.artist.name},
 		{success: function(fmData){
 			// Try and get the release date from the Last.FM data
-			console.log(thisAlbum.artist.name + " - " + thisAlbum.name);
-			console.log(fmData);
+			//console.log(thisAlbum.artist.name + " - " + thisAlbum.name);
+			//console.log(fmData);
 			var trimmedDate = fmData.album.releasedate.replace(/^\s+|\s+$/g, '');
 			if (trimmedDate != ""){
 				if (fmData.album.releasedate.indexOf("2010") != -1){
@@ -86,9 +86,9 @@ function parseAlbums(list){
 							}
 						}
 						catch (error){
-							console.log("Oops, fucked up parsin a MusicBrainz results. Hope it's not from 2010. Here it is...");
-							console.log(yqlData);
-							console.log("PS: Artist: " + thisAlbum.artist.name + " - " + thisAlbum.name);
+							//console.log("Oops, fucked up parsin a MusicBrainz results. Hope it's not from 2010. Here it is...");
+							//console.log(yqlData);
+							//console.log("PS: Artist: " + thisAlbum.artist.name + " - " + thisAlbum.name);
 						}
 				});
 			}
@@ -105,6 +105,15 @@ function parseAlbums(list){
 
 function addAlbum(album){
 	topAlbums.push(album);
+}
+
+function resetAll(){
+				topAlbums = []
+				parseAlbumsCounter = 0;	
+		$('#results').html('');
+		if ($('#friendsToolbar').is(":visible")){
+			$('#friendsToolbar').hide('blind');
+		}
 }
 
 function showResults(){
@@ -132,75 +141,125 @@ function showResults(){
 		$('#loading').hide('blind');
 	}
 	results.show('blind');
+	$('#friendsToolbar').show('blind');
 }
 
 $(function(){
 
-// Bind an event to window.onhashchange. Note the only hash we set is the username
-$(window).hashchange( function(){
-	var hash = location.hash;
-	// If the hash is empty, it may just be an inital load, or it could be a 'back' on the browswer
-	if (hash == ""){
-		if ($('#loading').is(":visible")){
-			$('#loading').hide('blind');
-		}
-		if ($('#results').is(":visible")){
-			$('#results').hide('blind');
-		}
-		if ($('#getUser').is(":hidden")){
-			$('#getUser').show('blind');
-		}
-		return;
-	}
-	
-
-	// If the failure message is showing, hide it
-	var userFail = $('#getUserFailure');
-	if ($(userFail).is(":visible")){
-		$(userFail).hide('blind');
-	}
-
-
-	function getUserFail(){
-		$(userFail).html("Sorry, that username appears to be invalid. Maybe you misspelled it?");
-		$(userFail).show('blind');
-	}
-
-	lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {
-		success: function(data){
-			console.log(data);
-
-			if (data.topalbums.album == null){
-				getUserFail();
-				return;
+	// Bind an event to window.onhashchange. Note the only hash we set is the username
+	$(window).hashchange( function(){
+		var hash = location.hash;
+		// If the hash is empty, it may just be an inital load, or it could be a 'back' on the browswer
+		if (hash == ""){
+			if ($('#loading').is(":visible")){
+				$('#loading').hide();
 			}
-
-			realUserName = data.topalbums['@attr'].user;
-			// Set the page title based on the username.
-			document.title = realUserName + "'s Top Albums of 2010";
-			// Looks like everything is fine. Set the hash parameter and let hashchange take over
-			// Set the parameter
-			$('#getUser').hide('blind');
-			$('#loading').show('blind');
-			
-			albumList = data.topalbums.album;
-			parseAlbums(albumList);
-		}, error: function(code, message){	
-			getUserFail();
+			if ($('#results').is(":visible")){
+				$('#results').hide();
+			}
+			if ($('#getUser').is(":hidden")){
+				$('#getUser').show('blind');
+			}
+			return;
 		}
-	});
-})
+		else{
+			if ($('#getUser').is(":visible")){
+				$('#getUser').hide();
+			}
+			if ($('#results').is(":visible")){
+				$('#results').hide();
+			}
+			if ($('#loading').is(":hidden")){
+				$('#loading').show('blind');
+			}
+		}
 
-// Since the event is only triggered when the hash changes, we need to trigger
-// the event now, to handle the hash the page may have loaded with.
-$(window).hashchange();
+
+		// If the failure message is showing, hide it
+		var userFail = $('#getUserFailure');
+		if ($(userFail).is(":visible")){
+			$(userFail).hide('blind');
+		}
+
+
+		function getUserFail(message){
+			$(userFail).html(message);
+			$(userFail).show('blind');
+			if ($('#loading').is(":visible")){
+				$('#loading').hide('blind');
+			}
+			if ($('#getUser').is(":hidden")){
+				$('#getUser').show('blind');
+			}
+		}
+
+		lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {
+			success: function(data){
+				console.log(data);
+
+				if (data.topalbums.album == null){
+					getUserFail("Not enough data from that user. Please try another!");
+					return;
+				}
+
+				realUserName = data.topalbums['@attr'].user;
+				// Set the page title based on the username.
+				document.title = realUserName + "'s Top Albums of 2010";
+				// Looks like everything is fine. Set the hash parameter and let hashchange take over
+				// Set the parameter
+				
+				albumList = data.topalbums.album;
+				resetAll();
+				parseAlbums(albumList);
+			}, error: function(code, message){	
+				getUserFail("Sorry, that username appears to be invalid. Maybe you misspelled it?");
+			}
+		});
+		lastfm.user.getFriends({user: hash.substr(1)}, {
+			success: function(data){
+				console.log(data);
+				// Simplified cause we know there are no matches
+				function compareUsers(a,b){
+					if ( a.name.toLowerCase() < b.name.toLowerCase() )
+						return -1;
+					else
+						return 1;
+				}
+				var sorted = data.friends.user;
+				sorted.sort(compareUsers);
+
+				$('#friend-list-username').html('<h4>'+ location.hash.substr(1) + '</h4>'); 
+
+				$('#friend-list').html('');	
+				$('#friend-list').append('<option value=null>Select to judge.</option>');
+				$.each(sorted, function(index, value){
+					var item = '<option value="' + value.name + '">' + value.name + '</option>'; 
+					$('#friend-list').append(item);
+				});
+			},
+			error: function(code, message){
+				console.log(code + message);	
+			}
+		});
+	})
+
+	// Since the event is only triggered when the hash changes, we need to trigger
+	// the event now, to handle the hash the page may have loaded with.
+	$(window).hashchange();
 });
 
 $(document).ready(function() {
 	$('#submitUser').click(function(){
 		// Just set the hash for username. Hashchange will take are of the rest
 		location.hash = $('#username').val();
-})
+	})
+
+	$('#friend-list').live("change keyup", function(item){
+		var picked = $('#friend-list').val();
+		console.log(picked);
+		location.hash = picked;
+		$('#friendsToolbar').hide('blind');
+	});
 
 });
 
