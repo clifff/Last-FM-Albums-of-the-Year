@@ -205,6 +205,7 @@ $(function(){
 				realUserName = data.topalbums['@attr'].user;
 				// Set the page title based on the username.
 				document.title = realUserName + "'s Top Albums of 2010";
+				$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
 				// Looks like everything is fine. Set the hash parameter and let hashchange take over
 				// Set the parameter
 				
@@ -228,7 +229,6 @@ $(function(){
 				var sorted = data.friends.user;
 				sorted.sort(compareUsers);
 
-				$('#friend-list-username').html('<h4>'+ location.hash.substr(1) + '</h4>'); 
 
 				$('#friend-list').html('');	
 				$('#friend-list').append('<option value=null>Select to judge.</option>');
@@ -259,6 +259,16 @@ $(document).ready(function() {
 		console.log(picked);
 		location.hash = picked;
 		$('#friendsToolbar').hide('blind');
+	});
+
+	$('#about-link').click(function(){
+		$('#about').show('blind');
+		return false;
+	});
+
+	$('#about-close').click(function(){
+		$('#about').hide('blind');
+		return false;
 	});
 
 });
