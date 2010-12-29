@@ -262,7 +262,13 @@ $(document).ready(function() {
 	});
 
 	$('#about-link').click(function(){
-		$('#about').show('blind');
+
+		if ($('#about').is(":visible")){
+			$('#about').hide('blind');
+		}
+		else{
+			$('#about').show('blind');
+		}
 		return false;
 	});
 
