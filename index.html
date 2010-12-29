@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Top Albums of 2010</title>
+	<title>My Top Albums of 2010</title>
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" />
 	<link rel="stylesheet" href="stylesheets/screen.css" type="text/css" />
 	<link rel="stylesheet" href="stylesheets/main.css" type="text/css" />
@@ -31,12 +31,28 @@
 </head>
 
 <body>
+	<!-- Load the Facebook Javascript SDK -->
+	<div id="fb-root"></div>
+	<script src="http://connect.facebook.net/en_US/all.js"></script>
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({appId: 'your app id', status: true, cookie: true,
+							xfbml: true});
+		};
+		(function() {
+			var e = document.createElement('script'); e.async = true;
+			e.src = document.location.protocol +
+				'//connect.facebook.net/en_US/all.js';
+			document.getElementById('fb-root').appendChild(e);
+		}());
+	</script>
+
 	<div class='container'>
 		<div class='span-3 toolbar'>
 			<a id='about-link' href=''><h4>About</h4></a>
 			<a id='' href=''><h4>Home</h4></a>
 			<br/>
-			<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Falbumsof2010.com%2F&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font=verdana&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe>
+			<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like href="http://albumsof2010.com/" layout="button_count" show_faces="false" width="450"></fb:like>
 			<br/>
 			<a href="http://twitter.com/share" class="twitter-share-button" data-text="My top Albums of 2010, according to Last.FM" data-count="horizontal" data-via="ninjapirateclif">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 		</div>

@@ -148,6 +148,7 @@ $(function(){
 
 	// Bind an event to window.onhashchange. Note the only hash we set is the username
 	$(window).hashchange( function(){
+
 		var hash = location.hash;
 		// If the hash is empty, it may just be an inital load, or it could be a 'back' on the browswer
 		if (hash == ""){
@@ -252,12 +253,14 @@ $(document).ready(function() {
 	$('#submitUser').click(function(){
 		// Just set the hash for username. Hashchange will take are of the rest
 		location.hash = $('#username').val();
+		window.location.href=window.location.href
 	})
 
 	$('#friend-list').live("change keyup", function(item){
 		var picked = $('#friend-list').val();
 		console.log(picked);
 		location.hash = picked;
+		window.location.href=window.location.href
 		$('#friendsToolbar').hide('blind');
 	});
 
