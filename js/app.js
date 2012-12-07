@@ -42,7 +42,7 @@ function parseAlbums(list){
 			//console.log(fmData);
 			var trimmedDate = fmData.album.releasedate.replace(/^\s+|\s+$/g, '');
 			if (trimmedDate != ""){
-				if (fmData.album.releasedate.indexOf("2010") != -1){
+				if (fmData.album.releasedate.indexOf("2012") != -1){
 					addAlbum(thisAlbum);	
 				}
 				//parseAlbums(list);
@@ -81,7 +81,7 @@ function parseAlbums(list){
 								}
 							}
 							// Fucking finally. Should have the release date by now...
-							if (releaseDate.indexOf("2010") != -1){
+							if (releaseDate.indexOf("2012") != -1){
 								addAlbum(thisAlbum);	
 							}
 						}
@@ -119,7 +119,7 @@ function resetAll(){
 function showResults(){
 	results = $('#results');
 
-	results.append('<h1>' + realUserName + "'s Top Albums of 2010</h1>");
+	results.append('<h1>' + realUserName + "'s Top Albums of 2012</h1>");
 	results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
 	// Sort top albums before displaying!
 	function compareAlbums(a,b) {
@@ -205,7 +205,7 @@ $(function(){
 
 				realUserName = data.topalbums['@attr'].user;
 				// Set the page title based on the username.
-				document.title = realUserName + "'s Top Albums of 2010";
+				document.title = realUserName + "'s Top Albums of 2012";
 				$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
 				// Looks like everything is fine. Set the hash parameter and let hashchange take over
 				// Set the parameter
