@@ -17,7 +17,8 @@ $.YQL = function(query, callback) {
 var topAlbums = [];
 var albumList;
 var realUserName;
-var year = "2014";
+var year;
+var hash;
 
 var parseAlbumsCounter = 0;	
 var lastRequest; 
@@ -82,7 +83,7 @@ function parseAlbums(list){
 								}
 							}
 							// Fucking finally. Should have the release date by now...
-							if (releaseDate.indexOf("year") != -1){
+							if (releaseDate.indexOf(year) != -1){
 								addAlbum(thisAlbum);	
 							}
 						}
@@ -115,12 +116,15 @@ function resetAll(){
 		if ($('#friendsToolbar').is(":visible")){
 			$('#friendsToolbar').hide('blind');
 		}
+		if ($('#yearsToolbar').is(":visible")) {
+			$('#yearsToolbar').hide('blind');
+		}
 }
 
 function showResults(){
 	results = $('#results');
 
-	results.append('<h1>' + realUserName + "'s Top Albums of" + year +"</h1>");
+	results.append('<h1>' + realUserName + "'s Top Albums of " + year +"</h1>");
 	results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
 	// Sort top albums before displaying!
 	function compareAlbums(a,b) {
@@ -143,6 +147,7 @@ function showResults(){
 	}
 	results.show('blind');
 	$('#friendsToolbar').show('blind');
+	$('#yearsToolbar').show('blind');
 }
 
 $(function(){
@@ -150,7 +155,8 @@ $(function(){
 	// Bind an event to window.onhashchange. Note the only hash we set is the username
 	$(window).hashchange( function(){
 
-		var hash = location.hash;
+		hash = location.hash;
+		year = hash.substr(1,4);
 		// If the hash is empty, it may just be an inital load, or it could be a 'back' on the browswer
 		if (hash == ""){
 			if ($('#loading').is(":visible")){
@@ -195,7 +201,7 @@ $(function(){
 			}
 		}
 
-		lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {
+		lastfm.user.getTopAlbums({user: hash.substr(5), period: '12month'}, {
 			success: function(data){
 				console.log(data);
 
@@ -206,7 +212,7 @@ $(function(){
 
 				realUserName = data.topalbums['@attr'].user;
 				// Set the page title based on the username.
-				document.title = realUserName + "'s Top Albums of" + year;
+				document.title = realUserName + "'s Top Albums of " + year;
 				$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
 				// Looks like everything is fine. Set the hash parameter and let hashchange take over
 				// Set the parameter
@@ -218,7 +224,7 @@ $(function(){
 				getUserFail("Sorry, that username appears to be invalid. Maybe you misspelled it?");
 			}
 		});
-		lastfm.user.getFriends({user: hash.substr(1)}, {
+		lastfm.user.getFriends({user: hash.substr(5)}, {
 			success: function(data){
 				console.log(data);
 				// Simplified cause we know there are no matches
@@ -243,22 +249,23 @@ $(function(){
 				console.log(code + message);	
 			}
 		});
-		lastfm.user.getInfo({user: hash.substr(1)}, {
+		lastfm.user.getInfo({user: hash.substr(5)}, {
 			success: function(data) {
 				console.log(data);
-				var registerYear = data.user.registered.getFullYear();
+				var registerYear = new Date(data.user.registered["unixtime"]*1000).getFullYear();
 				var currentYear = new Date().getFullYear();
-				var diff = currentYear;
-				
-				
+								
 				$('#year-list').html('');
 				$('#year-list').append('<option value=null>Select to judge.</option>');
-				while(diff>registerYear) {
-					var item = '<option value="' + diff + '">' + diff + '</option>';
+				while(currentYear>registerYear) {
+					var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
 					$('#year-list').append(item);
+					currentYear--;
 				};
-				
-			});
+			},
+			error: function(code, message) {
+				console.log(code + message);
+			}
 		});
 	})
 
@@ -270,16 +277,24 @@ $(function(){
 $(document).ready(function() {
 	$('#submitUser').click(function(){
 		// Just set the hash for username. Hashchange will take are of the rest
-		location.hash = $('#username').val();
+		location.hash = new Date().getFullYear() + $('#username').val();
 		window.location.href=window.location.href
 	})
 
 	$('#friend-list').live("change keyup", function(item){
 		var picked = $('#friend-list').val();
 		console.log(picked);
-		location.hash = picked;
+		location.hash = hash.substr(1,4) + picked;
 		window.location.href=window.location.href
 		$('#friendsToolbar').hide('blind');
+	});
+	
+	$('#year-list').live("change keyup", function(item) {
+		var picked = $('#year-list').val();
+		console.log(picked);
+		location.hash = picked + hash.substr(5);
+		window.location.href = window.location.href
+		$('#yearsToolbar').hide('blind');
 	});
 
 	$('#about-link').click(function(){
