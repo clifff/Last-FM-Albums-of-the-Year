@@ -51,7 +51,7 @@ function parseAlbums(list){
 			}
 			// Snap, no release data. Lets get it from YQL/MusicBrains!
 			else{
-				query = "select * from xml where url='http://musicbrainz.org/ws/1/release/?type=xml&arist=";
+				query = "select * from xml where url='http://musicbrainz.org/ws/1/release/?type=xml&artist=";
 				query+= escape(thisAlbum.artist.name)+"&title="+escape(thisAlbum.name) + "'";
 				$.YQL(query,
 					function(yqlData){
