@@ -254,7 +254,7 @@ $(function(){
 
 
 				$('#friend-list').html('');	
-				//$('#friend-list').append('<option value=null>Select to judge.</option>');
+				$('#friend-list').append('<option value=null>Select to judge.</option>');
 				$.each(sorted, function(index, value){
 					var item = '<option value="' + value.name + '">' + value.name + '</option>'; 
 					$('#friend-list').append(item);
@@ -272,7 +272,7 @@ $(function(){
 				var currentYear = new Date().getFullYear();
 								
 				$('#year-list').html('');
-				//$('#year-list').append('<option value=null>Select to judge.</option>');
+				$('#year-list').append('<option value=null>Select to judge.</option>');
 				while(currentYear>registerYear) {
 					var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
 					$('#year-list').append(item);
