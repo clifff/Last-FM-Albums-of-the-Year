@@ -1,4 +1,4 @@
-.main {
+/*.main {
   text-align: center;
   height: 100%;
   padding-left: 140px; }
@@ -18,18 +18,17 @@ a {
   a h4 {
     text-decoration: none;
     padding-bottom: 0.25em; }
-
+*/
 #friendsToolbar {
-  margin-left: 840px;
+  margin-left: 640px;
   text-align: center; }
 
 #yearsToolbar {
-	margin-left: 840px;
-  margin-top: 150px;
+	margin-left: 640px;
 	text-align: center; }
 .hidden {
   display: none; }
-
+/*
 .vertialOut {
   position: relative; }
 

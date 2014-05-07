@@ -10,11 +10,13 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 	
+	<!-- Templates -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.3.5/bootstrap-select.min.css">
 	<link rel="stylesheet" href="stylesheets/cover.css" type="text/css" />
 	
 	<!--<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" />
-	<link rel="stylesheet" href="stylesheets/screen.css" type="text/css" />
-	<link rel="stylesheet" href="stylesheets/main.css" type="text/css" />-->
+	<link rel="stylesheet" href="stylesheets/screen.css" type="text/css" />-->
+	<link rel="stylesheet" href="stylesheets/main.css" type="text/css" />
 
 </head>
 
@@ -28,21 +30,39 @@
 
         <div class="cover-container">
 
-          <div class="masthead clearfix">
+          <div class="masthead clearfix" id='pageTitle'>
             <div class="inner">
               <h3 class="masthead-brand">Last.FM Albums of the Year</h3>
 
             </div>
+            
+          </div>
+          
+          <div class="masthead clearfix" id='toolbar'>
+			<div class='inner' id='friendsToolbar'>
+				<div id='friend-list-username'></div>
+				<h5>Friend's Top Albums</h5>
+				<select class="selectpicker" data-style="btn-inverse" id='friend-list'>
+				</select>
+			</div>
+			<div class='inner' id='yearsToolbar'>
+				<div id='years-list'></div>
+				<h5>Select Year</h5>
+				<select  class="selectpicker" data-style="btn-inverse" id='year-list'>
+				</select>
+			</div>
           </div>
 
-          <div class="inner cover">
+            
+		
+          <div class="inner cover" id='getUser'>
             
 				<h3>Last.FM Username:</h3>
 					<div class="input-group">
 					<span class="input-group-addon">@</span>
 						<input type="text" class="form-control" placeholder="Username" id='username'>
 						<span class="input-group-btn">
-						<button class="btn btn-primary" type="button">Go!</button>
+						<button class="btn btn-primary" type="button" id='submitUser'>Go!</button>
 					</span>
 					</div>
 					
@@ -52,8 +72,17 @@
 				Any inaccuracies are (probably) their fault.</h4>
             <p class="lead">
           </div>
-
-          <div class="mastfoot">
+          
+          <div class='inner lead' id='loading'>
+			<div style='height:75px'></div>
+			<img src="images/BRB-LOADINGJUDGING.jpg" alt="BRB. LOADING"/>
+		  </div>
+		<div class='inner lead' id='results'>
+		</div>
+		
+		
+		
+          <div class="mastfoot" id="footer">
             <div class="inner">
 				<p>Created by clifreeder at gmail.
 				Source at <a target='_blank' href=https://github.com/Clifff/Last-FM-Albums-of-the-Year>GitHub</a></p>
@@ -66,12 +95,11 @@
         </div>
 
       </div>
-
     </div>
 
-  
+  <!--
 	<div class='container'>
-	<!--	<div class='span-3 toolbar'>
+		<div class='span-3 toolbar'>
 			<a id='about-link' href=''><h4>About</h4></a>
 			<a id='' href=''><h4>Home</h4></a>
 			<br/>
@@ -95,7 +123,7 @@
 		</div>
 			<a href='' id='about-close'><h4>Close About</h4></a>
 			<br/>
-		</div>-->
+		</div>
 		<div class='span-17 main hidden' id='loading'>
 			<div style='height:75px'></div>
 			<img src="images/BRB-LOADINGJUDGING.jpg" alt="BRB. LOADING"/>
@@ -114,14 +142,14 @@
 			<select id='year-list'>
 			</select>
 		</div>
-	</div>
+	</div>-->
 	
 		
 	<!-- Move to footer to increase web loading speed -->
+	<footer>
 	
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js"></script>-->
 	<script type="text/javascript" src="js/lastfm.api.md5.js"></script>
@@ -132,7 +160,8 @@
 
 
 	<!-- Bootstrap ompiled and minified JavaScript -->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.3.5/bootstrap-select.min.js"></script>
 	
 <!--
 	<script type="text/javascript">
@@ -148,13 +177,6 @@
 		})();
 
 	</script>-->
-	
-	<footer id="footer" class="container footer" role="contentinfo"> 
-		
-<p>Created by clifreeder at gmail<br/>
-		Source at <a target='_blank' href=https://github.com/Clifff/Last-FM-Albums-of-the-Year>GitHub</a></p>
-		<p>Forked by <a href="https://wuyingren.github.io">Jordi López</a><br/>
-		Source at <a target='_blank' href=https://github.com/wuyingren/Last-FM-Albums-of-the-Year>GitHub</a></p>
 	</footer>
 </body>
 </html>

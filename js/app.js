@@ -168,6 +168,15 @@ $(function(){
 			if ($('#getUser').is(":hidden")){
 				$('#getUser').show('blind');
 			}
+			if ($('#pageTitle').is(":hidden")){
+				$('#pageTitle').show('blind');
+			}
+			if ($('#footer').is(":hidden")){
+				$('#footer').show('blind');
+			}
+			if ($('#toolbar').is(":visible")){
+				$('#toolbar').hide();
+			}
 			return;
 		}
 		else{
@@ -179,6 +188,15 @@ $(function(){
 			}
 			if ($('#loading').is(":hidden")){
 				$('#loading').show('blind');
+			}
+			if ($('#pageTitle').is(":visible")){
+				$('#pageTitle').hide();
+			}
+			if ($('#footer').is(":visible")){
+				$('#footer').hide();
+			}
+			if ($('#toolbar').is(":hidden")){
+				$('#toolbar').show('blind');
 			}
 		}
 
@@ -203,8 +221,6 @@ $(function(){
 
 		lastfm.user.getTopAlbums({user: hash.substr(5), period: '12month'}, {
 			success: function(data){
-				console.log(data);
-
 				if (data.topalbums.album == null){
 					getUserFail("Not enough data from that user. Please try another!");
 					return;
@@ -226,7 +242,6 @@ $(function(){
 		});
 		lastfm.user.getFriends({user: hash.substr(5)}, {
 			success: function(data){
-				console.log(data);
 				// Simplified cause we know there are no matches
 				function compareUsers(a,b){
 					if ( a.name.toLowerCase() < b.name.toLowerCase() )
@@ -239,11 +254,13 @@ $(function(){
 
 
 				$('#friend-list').html('');	
-				$('#friend-list').append('<option value=null>Select to judge.</option>');
+				//$('#friend-list').append('<option value=null>Select to judge.</option>');
 				$.each(sorted, function(index, value){
 					var item = '<option value="' + value.name + '">' + value.name + '</option>'; 
 					$('#friend-list').append(item);
 				});
+				// Selectors to Bootstrap using bootstrap-selector lib
+				$('.selectpicker').selectpicker();
 			},
 			error: function(code, message){
 				console.log(code + message);	
@@ -251,12 +268,11 @@ $(function(){
 		});
 		lastfm.user.getInfo({user: hash.substr(5)}, {
 			success: function(data) {
-				console.log(data);
 				var registerYear = new Date(data.user.registered["unixtime"]*1000).getFullYear();
 				var currentYear = new Date().getFullYear();
 								
 				$('#year-list').html('');
-				$('#year-list').append('<option value=null>Select to judge.</option>');
+				//$('#year-list').append('<option value=null>Select to judge.</option>');
 				while(currentYear>registerYear) {
 					var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
 					$('#year-list').append(item);
@@ -267,8 +283,11 @@ $(function(){
 				console.log(code + message);
 			}
 		});
+		
 	})
 
+	
+	
 	// Since the event is only triggered when the hash changes, we need to trigger
 	// the event now, to handle the hash the page may have loaded with.
 	$(window).hashchange();
@@ -297,7 +316,7 @@ $(document).ready(function() {
 		$('#yearsToolbar').hide('blind');
 	});
 
-	$('#about-link').click(function(){
+	/*$('#about-link').click(function(){
 
 		if ($('#about').is(":visible")){
 			$('#about').hide('blind');
@@ -311,7 +330,7 @@ $(document).ready(function() {
 	$('#about-close').click(function(){
 		$('#about').hide('blind');
 		return false;
-	});
+	});*/
 
 });
 
