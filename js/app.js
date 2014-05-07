@@ -146,8 +146,9 @@ function showResults(){
 		$('#loading').hide('blind');
 	}
 	results.show('blind');
-	$('#friendsToolbar').show('blind');
-	$('#yearsToolbar').show('blind');
+	/*$('#friendsToolbar').show('blind');
+	$('#yearsToolbar').show('blind');*/
+	$('#toolbar').show('blind');
 }
 
 $(function(){
@@ -194,9 +195,6 @@ $(function(){
 			}
 			if ($('#footer').is(":visible")){
 				$('#footer').hide();
-			}
-			if ($('#toolbar').is(":hidden")){
-				$('#toolbar').show('blind');
 			}
 		}
 
