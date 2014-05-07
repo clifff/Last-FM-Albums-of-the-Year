@@ -325,6 +325,13 @@ $(document).ready(function() {
 		window.location.href=window.location.href
 	});
 	
+	$('#username').keypress(function(e) {
+		if(e.which==13) {
+			// Just set the hash for username. Hashchange will take are of the rest
+			location.hash = new Date().getFullYear() + $('#username').val();
+			window.location.href=window.location.href
+		}
+	});
 	
 	$('#friend-list').on("change keyup", function(item){
 		var picked = $('#friend-list').val();
