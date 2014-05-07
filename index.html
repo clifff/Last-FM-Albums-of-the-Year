@@ -3,20 +3,81 @@
 <head>
 	<meta charset="utf-8" />
 	<title>My Top Albums of the year</title>
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" />
+	
+	
+	<!-- Bootstrap v3.1.1 CDN -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	
+	<link rel="stylesheet" href="stylesheets/cover.css" type="text/css" />
+	
+	<!--<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" />
 	<link rel="stylesheet" href="stylesheets/screen.css" type="text/css" />
-	<link rel="stylesheet" href="stylesheets/main.css" type="text/css" />
+	<link rel="stylesheet" href="stylesheets/main.css" type="text/css" />-->
 
 </head>
 
 <body>
+	
+
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Last.FM Albums of the Year</h3>
+
+            </div>
+          </div>
+
+          <div class="inner cover">
+            
+				<h3>Last.FM Username:</h3>
+					<div class="input-group">
+					<span class="input-group-addon">@</span>
+						<input type="text" class="form-control" placeholder="Username" id='username'>
+						<span class="input-group-btn">
+						<button class="btn btn-primary" type="button">Go!</button>
+					</span>
+					</div>
+					
+			<p class="lead">
+				<h4>This website looks through your Last.FM scrobble history to determine your most listened to albums that came out in a specific year.
+				To find out what year an album was released, it checks Last.FM, and as a fallback, MusicBrainz. 
+				Any inaccuracies are (probably) their fault.</h4>
+            <p class="lead">
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+				<p>Created by clifreeder at gmail.
+				Source at <a target='_blank' href=https://github.com/Clifff/Last-FM-Albums-of-the-Year>GitHub</a></p>
+				<p>Foked and updated by <a href="https://twitter.com/wuyingren">wuyingren.</a>
+				Source at <a target='_blank' href=https://github.com/wuyingren/Last-FM-Albums-of-the-Year>GitHub</a></p>
+              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  
 	<div class='container'>
-		<div class='span-3 toolbar'>
+	<!--	<div class='span-3 toolbar'>
 			<a id='about-link' href=''><h4>About</h4></a>
 			<a id='' href=''><h4>Home</h4></a>
 			<br/>
 			<a href="http://twitter.com/share" class="twitter-share-button" data-text="My top Albums of the year, according to Last.FM" data-count="horizontal" data-via="ninjapirateclif">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 		</div>
+		
 		<div class='span-17 main hidden' id='about'>
 			<p>This website looks through your Last.FM scrobble history to determine your most listened to albums that came out in a specific year.
 			<br/>To find out what year an album was released, it checks Last.FM, and as a fallback, MusicBrainz. 
@@ -25,9 +86,6 @@
 			<p>Created by clifreeder at gmail<br/>
 			Source at <a target='_blank' href=https://github.com/Clifff/Last-FM-Albums-of-the-Year>GitHub</a></p>
 
-			<a href='' id='about-close'><h4>Close About</h4></a>
-			<br/>
-		</div>
 		<div class='span-17 main hidden' id='getUser'>	
 				<div style='height:75px'></div>
 				<h2>Last.FM Username:</h2>
@@ -35,6 +93,9 @@
 				<button id='submitUser'>Find my Top 10 Albums of the year</button>
 				<div id='getUserFailure'></div>
 		</div>
+			<a href='' id='about-close'><h4>Close About</h4></a>
+			<br/>
+		</div>-->
 		<div class='span-17 main hidden' id='loading'>
 			<div style='height:75px'></div>
 			<img src="images/BRB-LOADINGJUDGING.jpg" alt="BRB. LOADING"/>
@@ -55,17 +116,25 @@
 		</div>
 	</div>
 	
-	<footer>
 		
 	<!-- Move to footer to increase web loading speed -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js"></script>
+	
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js"></script>-->
 	<script type="text/javascript" src="js/lastfm.api.md5.js"></script>
 	<script type="text/javascript" src="js/lastfm.api.js"></script>
 	<script type="text/javascript" src="js/lastfm.api.cache.js"></script>
 	<script type="text/javascript" src="js/jquery.ba-hashchange.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 
+
+	<!-- Bootstrap ompiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	
+<!--
 	<script type="text/javascript">
 
 		var _gaq = _gaq || [];
@@ -78,7 +147,14 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 
-	</script>
+	</script>-->
+	
+	<footer id="footer" class="container footer" role="contentinfo"> 
+		
+<p>Created by clifreeder at gmail<br/>
+		Source at <a target='_blank' href=https://github.com/Clifff/Last-FM-Albums-of-the-Year>GitHub</a></p>
+		<p>Forked by <a href="https://wuyingren.github.io">Jordi López</a><br/>
+		Source at <a target='_blank' href=https://github.com/wuyingren/Last-FM-Albums-of-the-Year>GitHub</a></p>
 	</footer>
 </body>
 </html>

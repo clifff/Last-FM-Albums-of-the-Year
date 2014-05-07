@@ -281,7 +281,7 @@ $(document).ready(function() {
 		window.location.href=window.location.href
 	})
 
-	$('#friend-list').live("change keyup", function(item){
+	$('#friend-list').on("change keyup", function(item){
 		var picked = $('#friend-list').val();
 		console.log(picked);
 		location.hash = hash.substr(1,4) + picked;
@@ -289,7 +289,7 @@ $(document).ready(function() {
 		$('#friendsToolbar').hide('blind');
 	});
 	
-	$('#year-list').live("change keyup", function(item) {
+	$('#year-list').on("change keyup", function(item) {
 		var picked = $('#year-list').val();
 		console.log(picked);
 		location.hash = picked + hash.substr(5);
