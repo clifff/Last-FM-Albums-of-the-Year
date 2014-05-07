@@ -229,7 +229,7 @@ $(function(){
 				realUserName = data.topalbums['@attr'].user;
 				// Set the page title based on the username.
 				document.title = realUserName + "'s Top Albums of " + year;
-				$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
+				//$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
 				// Looks like everything is fine. Set the hash parameter and let hashchange take over
 				// Set the parameter
 				
@@ -268,13 +268,18 @@ $(function(){
 		});
 		lastfm.user.getInfo({user: hash.substr(5)}, {
 			success: function(data) {
-				var registerYear = new Date(data.user.registered["unixtime"]*1000).getFullYear();
+				//var registerYear = new Date(data.user.registered["unixtime"]*1000).getFullYear();
 				var currentYear = new Date().getFullYear();
 								
 				$('#year-list').html('');
 				$('#year-list').append('<option value=null>Select to judge.</option>');
-				while(currentYear>registerYear) {
-					var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
+				while(currentYear>=1860) {
+					if(currentYear==2002) {
+						var item = '<option data-subText="LastFM appears!" value="' + currentYear + '">' + currentYear + '</option>';
+					}
+					else {
+						var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
+					}
 					$('#year-list').append(item);
 					currentYear--;
 				};
@@ -299,7 +304,7 @@ $(document).ready(function() {
 		location.hash = new Date().getFullYear() + $('#username').val();
 		window.location.href=window.location.href
 	})
-
+	
 	$('#friend-list').on("change keyup", function(item){
 		var picked = $('#friend-list').val();
 		console.log(picked);

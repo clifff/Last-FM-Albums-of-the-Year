@@ -38,20 +38,6 @@
             
           </div>
           
-          <div class="masthead clearfix" id='toolbar'>
-			<div class='inner' id='friendsToolbar'>
-				<div id='friend-list-username'></div>
-				<h5>Friend's Top Albums</h5>
-				<select class="selectpicker" data-style="btn-primary" id='friend-list'>
-				</select>
-			</div>
-			<div class='inner' id='yearsToolbar'>
-				<div id='years-list'></div>
-				<h5>Select Year</h5>
-				<select  class="selectpicker" data-style="btn-primary" id='year-list'>
-				</select>
-			</div>
-          </div>
 
             
 		
@@ -59,7 +45,7 @@
             
 				<h3>Last.FM Username:</h3>
 					<div class="input-group">
-					<span class="input-group-addon">@</span>
+					<span class="input-group-addon">http://last.fm/user/</span>
 						<input type="text" class="form-control" placeholder="Username" id='username'>
 						<span class="input-group-btn">
 						<button class="btn btn-primary" type="button" id='submitUser'>Go!</button>
@@ -73,13 +59,27 @@
             <p class="lead">
           </div>
           
+		
+          <div class="btn-group" id='toolbar'>
+			<div class='pull-right' id='friendsToolbar'>
+				<div id='friend-list-username'></div>
+				<h5>Friend's Top Albums</h5>
+				<select class="selectpicker" data-style="btn-primary" id='friend-list'>
+				</select>
+			</div>
+			<div class='pull-right' id='yearsToolbar'>
+				<div id='years-list'></div>
+				<h5>Select Year</h5>
+				<select  class="selectpicker" data-style="btn-primary" id='year-list' >
+				</select>
+			</div>
+          </div>
           <div class='inner lead' id='loading'>
 			<div style='height:75px'></div>
 			<img src="images/BRB-LOADINGJUDGING.jpg" alt="BRB. LOADING"/>
 		  </div>
 		<div class='inner lead' id='results'>
 		</div>
-		
 		
 		
           <div class="mastfoot" id="footer">
