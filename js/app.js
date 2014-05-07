@@ -217,6 +217,16 @@ $(function(){
 			if ($('#getUser').is(":hidden")){
 				$('#getUser').show('blind');
 			}
+			
+			if ($('#pageTitle').is(":hidden")){
+				$('#pageTitle').show('blind');
+			}
+			if ($('#footer').is(":hidden")){
+				$('#footer').show('blind');
+			}
+			if ($('#toolbar').is(":visible")){
+				$('#toolbar').hide();
+			}
 		}
 
 		lastfm.user.getTopAlbums({user: hash.substr(5), period: '12month'}, {
@@ -303,7 +313,8 @@ $(document).ready(function() {
 		// Just set the hash for username. Hashchange will take are of the rest
 		location.hash = new Date().getFullYear() + $('#username').val();
 		window.location.href=window.location.href
-	})
+	});
+	
 	
 	$('#friend-list').on("change keyup", function(item){
 		var picked = $('#friend-list').val();
