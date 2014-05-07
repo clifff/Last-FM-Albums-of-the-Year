@@ -113,11 +113,14 @@ function resetAll(){
 				topAlbums = []
 				parseAlbumsCounter = 0;	
 		$('#results').html('');
-		if ($('#friendsToolbar').is(":visible")){
+		/*if ($('#friendsToolbar').is(":visible")){
 			$('#friendsToolbar').hide('blind');
 		}
 		if ($('#yearsToolbar').is(":visible")) {
 			$('#yearsToolbar').hide('blind');
+		}*/
+		if ($('#toolbar').is(":visible")) {
+			$('#toolbar').hide('blind');
 		}
 }
 
@@ -282,12 +285,23 @@ $(function(){
 				$('#year-list').html('');
 				$('#year-list').append('<option value=null>Select to judge.</option>');
 				while(currentYear>=1860) {
-					if(currentYear==2002) {
-						var item = '<option data-subText="LastFM appears!" value="' + currentYear + '">' + currentYear + '</option>';
-					}
-					else {
-						var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
-					}
+					switch(currentYear) {
+						case 2002:
+							var item = '<option data-subText="LastFM appears!" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1991:
+							var item = '<option data-subText="Freddy Mercury dies :(" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1959:
+							var item = '<option data-subText="The year the music died" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1915:
+							var item = '<option data-subText="Les Paul was born" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						default:
+							var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
+						}
+						
 					$('#year-list').append(item);
 					currentYear--;
 				};
@@ -298,8 +312,6 @@ $(function(){
 		});
 		
 	})
-
-	
 	
 	// Since the event is only triggered when the hash changes, we need to trigger
 	// the event now, to handle the hash the page may have loaded with.
@@ -319,7 +331,8 @@ $(document).ready(function() {
 		console.log(picked);
 		location.hash = hash.substr(1,4) + picked;
 		window.location.href=window.location.href
-		$('#friendsToolbar').hide('blind');
+		//$('#friendsToolbar').hide('blind');
+		$('#toolbar').hide('blind');
 	});
 	
 	$('#year-list').on("change keyup", function(item) {
@@ -327,7 +340,8 @@ $(document).ready(function() {
 		console.log(picked);
 		location.hash = picked + hash.substr(5);
 		window.location.href = window.location.href
-		$('#yearsToolbar').hide('blind');
+		//$('#yearsToolbar').hide('blind');
+		$('#toolbar').hide('blind');
 	});
 
 	/*$('#about-link').click(function(){
