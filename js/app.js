@@ -113,12 +113,6 @@ function resetAll(){
 				topAlbums = []
 				parseAlbumsCounter = 0;	
 		$('#results').html('');
-		/*if ($('#friendsToolbar').is(":visible")){
-			$('#friendsToolbar').hide('blind');
-		}
-		if ($('#yearsToolbar').is(":visible")) {
-			$('#yearsToolbar').hide('blind');
-		}*/
 		if ($('#toolbar').is(":visible")) {
 			$('#toolbar').hide('blind');
 		}
@@ -149,8 +143,6 @@ function showResults(){
 		$('#loading').hide('blind');
 	}
 	results.show('blind');
-	/*$('#friendsToolbar').show('blind');
-	$('#yearsToolbar').show('blind');*/
 	$('#toolbar').show('blind');
 }
 
@@ -350,22 +342,6 @@ $(document).ready(function() {
 		//$('#yearsToolbar').hide('blind');
 		$('#toolbar').hide('blind');
 	});
-
-	/*$('#about-link').click(function(){
-
-		if ($('#about').is(":visible")){
-			$('#about').hide('blind');
-		}
-		else{
-			$('#about').show('blind');
-		}
-		return false;
-	});
-
-	$('#about-close').click(function(){
-		$('#about').hide('blind');
-		return false;
-	});*/
 
 });
 
