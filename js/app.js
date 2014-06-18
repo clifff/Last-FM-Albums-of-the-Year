@@ -17,6 +17,8 @@ $.YQL = function(query, callback) {
 var topAlbums = [];
 var albumList;
 var realUserName;
+var year;
+var hash;
 
 var parseAlbumsCounter = 0;	
 var lastRequest; 
@@ -42,14 +44,14 @@ function parseAlbums(list){
 			//console.log(fmData);
 			var trimmedDate = fmData.album.releasedate.replace(/^\s+|\s+$/g, '');
 			if (trimmedDate != ""){
-				if (fmData.album.releasedate.indexOf("2012") != -1){
+				if (fmData.album.releasedate.indexOf(year) != -1){
 					addAlbum(thisAlbum);	
 				}
 				//parseAlbums(list);
 			}
 			// Snap, no release data. Lets get it from YQL/MusicBrains!
 			else{
-				query = "select * from xml where url='http://musicbrainz.org/ws/1/release/?type=xml&arist=";
+				query = "select * from xml where url='http://musicbrainz.org/ws/1/release/?type=xml&artist=";
 				query+= escape(thisAlbum.artist.name)+"&title="+escape(thisAlbum.name) + "'";
 				$.YQL(query,
 					function(yqlData){
@@ -81,7 +83,7 @@ function parseAlbums(list){
 								}
 							}
 							// Fucking finally. Should have the release date by now...
-							if (releaseDate.indexOf("2012") != -1){
+							if (releaseDate.indexOf(year) != -1){
 								addAlbum(thisAlbum);	
 							}
 						}
@@ -111,15 +113,21 @@ function resetAll(){
 				topAlbums = []
 				parseAlbumsCounter = 0;	
 		$('#results').html('');
-		if ($('#friendsToolbar').is(":visible")){
+		/*if ($('#friendsToolbar').is(":visible")){
 			$('#friendsToolbar').hide('blind');
+		}
+		if ($('#yearsToolbar').is(":visible")) {
+			$('#yearsToolbar').hide('blind');
+		}*/
+		if ($('#toolbar').is(":visible")) {
+			$('#toolbar').hide('blind');
 		}
 }
 
 function showResults(){
 	results = $('#results');
 
-	results.append('<h1>' + realUserName + "'s Top Albums of 2012</h1>");
+	results.append('<h1>' + realUserName + "'s Top Albums of " + year +"</h1>");
 	results.append("<div class='quiet'> According to Last.FM scrobbles</div><br/>");
 	// Sort top albums before displaying!
 	function compareAlbums(a,b) {
@@ -141,7 +149,9 @@ function showResults(){
 		$('#loading').hide('blind');
 	}
 	results.show('blind');
-	$('#friendsToolbar').show('blind');
+	/*$('#friendsToolbar').show('blind');
+	$('#yearsToolbar').show('blind');*/
+	$('#toolbar').show('blind');
 }
 
 $(function(){
@@ -149,7 +159,8 @@ $(function(){
 	// Bind an event to window.onhashchange. Note the only hash we set is the username
 	$(window).hashchange( function(){
 
-		var hash = location.hash;
+		hash = location.hash;
+		year = hash.substr(1,4);
 		// If the hash is empty, it may just be an inital load, or it could be a 'back' on the browswer
 		if (hash == ""){
 			if ($('#loading').is(":visible")){
@@ -160,6 +171,15 @@ $(function(){
 			}
 			if ($('#getUser').is(":hidden")){
 				$('#getUser').show('blind');
+			}
+			if ($('#pageTitle').is(":hidden")){
+				$('#pageTitle').show('blind');
+			}
+			if ($('#footer').is(":hidden")){
+				$('#footer').show('blind');
+			}
+			if ($('#toolbar').is(":visible")){
+				$('#toolbar').hide();
 			}
 			return;
 		}
@@ -172,6 +192,12 @@ $(function(){
 			}
 			if ($('#loading').is(":hidden")){
 				$('#loading').show('blind');
+			}
+			if ($('#pageTitle').is(":visible")){
+				$('#pageTitle').hide();
+			}
+			if ($('#footer').is(":visible")){
+				$('#footer').hide();
 			}
 		}
 
@@ -192,12 +218,20 @@ $(function(){
 			if ($('#getUser').is(":hidden")){
 				$('#getUser').show('blind');
 			}
+			
+			if ($('#pageTitle').is(":hidden")){
+				$('#pageTitle').show('blind');
+			}
+			if ($('#footer').is(":hidden")){
+				$('#footer').show('blind');
+			}
+			if ($('#toolbar').is(":visible")){
+				$('#toolbar').hide();
+			}
 		}
 
-		lastfm.user.getTopAlbums({user: hash.substr(1), period: '12month'}, {
+		lastfm.user.getTopAlbums({user: hash.substr(5), period: '12month'}, {
 			success: function(data){
-				console.log(data);
-
 				if (data.topalbums.album == null){
 					getUserFail("Not enough data from that user. Please try another!");
 					return;
@@ -205,8 +239,8 @@ $(function(){
 
 				realUserName = data.topalbums['@attr'].user;
 				// Set the page title based on the username.
-				document.title = realUserName + "'s Top Albums of 2012";
-				$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
+				document.title = realUserName + "'s Top Albums of " + year;
+				//$('#friend-list-username').html('<h4>'+ realUserName + "'s" +  '</h4>'); 
 				// Looks like everything is fine. Set the hash parameter and let hashchange take over
 				// Set the parameter
 				
@@ -217,9 +251,8 @@ $(function(){
 				getUserFail("Sorry, that username appears to be invalid. Maybe you misspelled it?");
 			}
 		});
-		lastfm.user.getFriends({user: hash.substr(1)}, {
+		lastfm.user.getFriends({user: hash.substr(5)}, {
 			success: function(data){
-				console.log(data);
 				// Simplified cause we know there are no matches
 				function compareUsers(a,b){
 					if ( a.name.toLowerCase() < b.name.toLowerCase() )
@@ -237,13 +270,49 @@ $(function(){
 					var item = '<option value="' + value.name + '">' + value.name + '</option>'; 
 					$('#friend-list').append(item);
 				});
+				// Selectors to Bootstrap using bootstrap-selector lib
+				$('.selectpicker').selectpicker();
 			},
 			error: function(code, message){
 				console.log(code + message);	
 			}
 		});
+		lastfm.user.getInfo({user: hash.substr(5)}, {
+			success: function(data) {
+				//var registerYear = new Date(data.user.registered["unixtime"]*1000).getFullYear();
+				var currentYear = new Date().getFullYear();
+								
+				$('#year-list').html('');
+				$('#year-list').append('<option value=null>Select to judge.</option>');
+				while(currentYear>=1860) {
+					switch(currentYear) {
+						case 2002:
+							var item = '<option data-subText="LastFM appears!" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1991:
+							var item = '<option data-subText="Freddy Mercury dies :(" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1959:
+							var item = '<option data-subText="The year the music died" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						case 1915:
+							var item = '<option data-subText="Les Paul was born" value="' + currentYear + '">' + currentYear + '</option>';
+							break;
+						default:
+							var item = '<option value="' + currentYear + '">' + currentYear + '</option>';
+						}
+						
+					$('#year-list').append(item);
+					currentYear--;
+				};
+			},
+			error: function(code, message) {
+				console.log(code + message);
+			}
+		});
+		
 	})
-
+	
 	// Since the event is only triggered when the hash changes, we need to trigger
 	// the event now, to handle the hash the page may have loaded with.
 	$(window).hashchange();
@@ -252,19 +321,37 @@ $(function(){
 $(document).ready(function() {
 	$('#submitUser').click(function(){
 		// Just set the hash for username. Hashchange will take are of the rest
-		location.hash = $('#username').val();
+		location.hash = new Date().getFullYear() + $('#username').val();
 		window.location.href=window.location.href
-	})
-
-	$('#friend-list').live("change keyup", function(item){
+	});
+	
+	$('#username').keypress(function(e) {
+		if(e.which==13) {
+			// Just set the hash for username. Hashchange will take are of the rest
+			location.hash = new Date().getFullYear() + $('#username').val();
+			window.location.href=window.location.href
+		}
+	});
+	
+	$('#friend-list').on("change keyup", function(item){
 		var picked = $('#friend-list').val();
 		console.log(picked);
-		location.hash = picked;
+		location.hash = hash.substr(1,4) + picked;
 		window.location.href=window.location.href
-		$('#friendsToolbar').hide('blind');
+		//$('#friendsToolbar').hide('blind');
+		$('#toolbar').hide('blind');
+	});
+	
+	$('#year-list').on("change keyup", function(item) {
+		var picked = $('#year-list').val();
+		console.log(picked);
+		location.hash = picked + hash.substr(5);
+		window.location.href = window.location.href
+		//$('#yearsToolbar').hide('blind');
+		$('#toolbar').hide('blind');
 	});
 
-	$('#about-link').click(function(){
+	/*$('#about-link').click(function(){
 
 		if ($('#about').is(":visible")){
 			$('#about').hide('blind');
@@ -278,7 +365,7 @@ $(document).ready(function() {
 	$('#about-close').click(function(){
 		$('#about').hide('blind');
 		return false;
-	});
+	});*/
 
 });
 
